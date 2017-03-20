@@ -1,22 +1,17 @@
 <?php
 use Bitrix\Main\Application;
-use WS\Tools\Module;
 
-if (!class_exists('\WS\Tools\Localization')) {
+if (!class_exists('\WS\BUnit\Localization')) {
     include __DIR__.'/../lib/localization.php';
 }
-if (!class_exists('\WS\Tools\Options')) {
+if (!class_exists('\WS\BUnit\Options')) {
     include __DIR__ . '/../lib/options.php';
 }
 
-/**
- * @author Sabirov Ruslan <sabirov@worksolutions.ru>
- */
-
-class ws_tools extends CModule {
+class ws_bunit extends CModule {
     const FALLBACK_LOCALE = 'ru';
-    const MODULE_ID = 'ws.tools';
-    var $MODULE_ID = 'ws.tools';
+    const MODULE_ID = 'ws.bunit';
+    var $MODULE_ID = 'ws.bunit';
     var $MODULE_VERSION;
     var $MODULE_VERSION_DATE;
     var $MODULE_NAME;
@@ -27,7 +22,7 @@ class ws_tools extends CModule {
     var $localization;
 
     /**
-     * @return \WS\Tools\Localization
+     * @return \WS\BUnit\Localization
      */
     private function localization() {
         $localizePath = __DIR__.'/../lang/'.LANGUAGE_ID;
@@ -36,7 +31,7 @@ class ws_tools extends CModule {
             $localizePath = __DIR__.'/../lang/'.self::FALLBACK_LOCALE;
         }
 
-        return new \WS\Tools\Localization(require $localizePath.'/info.php');
+        return new \WS\BUnit\Localization(require $localizePath.'/info.php');
     }
 
     public function __construct() {
@@ -45,7 +40,7 @@ class ws_tools extends CModule {
         $this->MODULE_VERSION = $arModuleVersion["VERSION"];
         $this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
 
-        $this->PARTNER_NAME = GetMessage("WS_TOOLS_PARTNER_NAME");
+        $this->PARTNER_NAME = GetMessage("WS_BUNIT_PARTNER_NAME");
 
         $localization = $this->localization();
         $this->MODULE_NAME = $localization->getDataByPath("name");
@@ -56,14 +51,14 @@ class ws_tools extends CModule {
 
     function InstallFiles() {
         $rootDir = Application::getDocumentRoot().'/'.Application::getPersonalRoot();
-        $adminGatewayFile = '/admin/ws_tools.php';
+        $adminGatewayFile = '/tools/bunit.php';
         copy(__DIR__. $adminGatewayFile, $rootDir . $adminGatewayFile);
         return true;
     }
 
     function UnInstallFiles() {
         $rootDir = Application::getDocumentRoot().'/'.Application::getPersonalRoot();
-        $adminGatewayFile = '/admin/ws_tools.php';
+        $adminGatewayFile = '/tools/bunit.php';
         unlink($rootDir . $adminGatewayFile);
         return true;
     }

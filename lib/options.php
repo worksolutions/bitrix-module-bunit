@@ -1,9 +1,6 @@
 <?php
-/**
- * @author Sabirov Ruslan <sabirov@worksolutions.ru>
- */
 
-namespace WS\Tools;
+namespace WS\BUnit;
 
 use Bitrix\Main\DB\Exception;
 
