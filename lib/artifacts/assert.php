@@ -22,4 +22,7 @@ class Assert {
 
     public function in(array $expected, $actual, $message = "") {
     }
+
+    public function fail($message) {
+    }
 }

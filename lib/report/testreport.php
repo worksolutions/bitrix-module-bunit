@@ -16,7 +16,7 @@ class TestReport {
         }
     }
 
-    public function addResult(TestReport $testReportResult) {
+    public function addResult(TestReportResult $testReportResult) {
         $this->results[] = $testReportResult;
     }
 

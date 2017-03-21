@@ -6,6 +6,7 @@
 namespace WS\BUnit\Cases;
 
 use WS\BUnit\Report\TestReport;
+use WS\BUnit\Report\TestReportResult;
 
 class CaseInvoker {
 
@@ -21,9 +22,22 @@ class CaseInvoker {
 
     function __construct(\ReflectionClass $class) {
         $this->class = $class;
+        $this->report = new TestReport();
     }
 
     public function invoke() {
+        $analyzer = new CaseAnalyzer($this->class);
+
+        foreach ($analyzer->getTestMethods() as $method) {
+            $result = new TestReportResult($this->class->getName(), $method->getName());
+            $this->report->addResult($result);
+            if ($analyzer->isSkip() || $method->isSkip()) {
+                $result->setResult(TestReportResult::RESULT_SKIP);
+                continue;
+            }
+            
+            
+        }
         // analyzes class
         // init assertion, give invokers manager
         // runs methods
