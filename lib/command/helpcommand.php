@@ -33,7 +33,10 @@ class HelpCommand extends BaseCommand {
         $consoleWriter->setColor(Output::COLOR_YELLOW)->printChars("Command db:");
         $consoleWriter->setColor(0)->printLine(" Works with project fixtures");
         $consoleWriter->nextLine();
-        $consoleWriter->setColor(Output::COLOR_GREEN)->printLine("   php bunit.php db");
+        $consoleWriter->setColor(Output::COLOR_GREEN)->printLine("   php bunit.php db -method=<method>");
+        $consoleWriter->setColor(0)->printLine("     -method=copy       Type of testcases which are declared in project");
+        $consoleWriter->setColor(0)->printLine("     -method=copy       Test tags");
+        $consoleWriter->nextLine();
         $consoleWriter->nextLine();
     }
 }
