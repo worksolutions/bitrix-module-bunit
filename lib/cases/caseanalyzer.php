@@ -55,7 +55,7 @@ class CaseAnalyzer {
             if (static::getFromBlock("test", $methodCommentData) === null) {
                 continue;
             }
-            $methodSkip = static::getFromBlock("skip", $methodCommentData) === null;
+            $methodSkip = static::getFromBlock("skip", $methodCommentData) !== null;
             $labels = static ::getMultipleFromBlock("label", $methodCommentData);
             $this->methods[] = new CaseTestMethod($method->getName(), $methodSkip, $labels);
         }

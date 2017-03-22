@@ -7,6 +7,7 @@ use WS\BUnit\Cases\BaseCase;
 use WS\BUnit\Cases\CaseInvoker;
 use WS\BUnit\Console\Formatter\Output;
 use WS\BUnit\Report\TestReport;
+use WS\BUnit\Report\TestReportResult;
 use WS\BUnit\RunConfig;
 
 /**
@@ -23,6 +24,11 @@ class RunnerCommand extends BaseCommand {
      * @var CaseInvoker[]
      */
     private $caseInvokers;
+
+    /**
+     * @var TestReport
+     */
+    private $report;
 
     public function execute() {
         $em = EventManager::getInstance();
@@ -51,19 +57,20 @@ class RunnerCommand extends BaseCommand {
     private function initTests() {
         // include tests files
         $dir = $this->config->getCaseFolder();
-        $directoryIterator = new \RecursiveDirectoryIterator($dir);
+        $directoryIterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \RecursiveIteratorIterator::SELF_FIRST));
         /** @var \SplFileInfo $file */
         foreach ($directoryIterator as $file) {
             if ($file->isDir()) {
                 continue;
             }
+
             if ($file->getExtension() != 'php') {
                 continue;
             }
-            if (stripos($file->getBasename(), "TestCase") === false) {
+            if (stripos($file->getPathname(), "TestCase") === false) {
                 continue;
             }
-            include $file->getPath();
+            include $file->getPathname();
         }
 
         foreach(get_declared_classes() as $className ){
@@ -76,23 +83,69 @@ class RunnerCommand extends BaseCommand {
             }
             $this->caseInvokers[] = $this->createCaseInvoker($refClass);
         }
-
-        $report = new TestReport();
-        foreach ($this->caseInvokers as $invoker) {
-            $invoker->invoke();
-            $report->apply($invoker->getReport());
-        }
-        // calculate run tests
-        // analyze test options
+        $this->report = new TestReport();
     }
 
     private function runTests() {
-        // create report
-        // run tests showing (.|F|S)
+        foreach ($this->caseInvokers as $invoker) {
+            $invoker->invoke();
+            $this->report->apply($invoker->getReport());
+        }
+
+        $writer = $this->getConsole()->getWriter();
+        $countInLine = 25;
+        $counter = 0;
+        foreach ($this->report->getResults() as $result) {
+            $counter++;
+            if ($counter % $countInLine == 0) {
+                $writer->nextLine();
+            }
+            switch ($result->getResult()) {
+                case TestReportResult::RESULT_SKIP:
+                    $writer->printChars("S");
+                    break;
+                case TestReportResult::RESULT_ERROR:
+                    $writer->printChars("E");
+                    break;
+                case TestReportResult::RESULT_SUCCESS:
+                    $writer->printChars(".");
+                    break;
+            }
+
+        }
+
     }
 
     private function viewReport() {
         // view errors of exceptions or fails
+
+        $writer = $this->getConsole()->getWriter();
+        $writer->nextLine();
+        $writer->nextLine();
+
+        if (!$this->report->isSuccess()) {
+            $writer->setColor(Output::COLOR_RED)->printLine(sprintf("Test failed. %s of %s have been with error.", $this->report->errorCount(), $this->report->count()));
+        } else if ($this->report->isSkip()) {
+            $writer->setColor(Output::COLOR_YELLOW)->printLine(sprintf("Test was not absolutely right. %s tests of %s have been skipped.", $this->report->skippedCount(), $this->report->count()));
+        } else {
+            $writer->setColor(Output::COLOR_GREEN)->printLine(sprintf("Test success. %s tests.", $this->report->count()));
+        }
+        $writer->nextLine();
+
+        $writer->setColor(0)->printLine("Errors:");
+        $writer->nextLine();
+
+        $number = 1;
+        foreach ($this->report->getResults() as $result) {
+            $message = $result->getMessage();
+            if (!$message) {
+                continue;
+            }
+            $writer->setColor(Output::COLOR_RED)->printLine($number.") ".$result->getClass()."::".$result->getMethod());
+            $writer->setColor(0)->printLine($message);
+            $writer->nextLine();
+            $number++;
+        }
     }
 
     /**

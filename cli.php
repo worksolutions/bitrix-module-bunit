@@ -18,7 +18,7 @@ $console = new \WS\BUnit\Console\Console($argv);
 
 $console->getWriter()
     ->setColor(0)
-    ->printLine("xUnit framework for CMS Bitrix. Worksolutions company http://worksolutions.ru");
+    ->printLine("xUnit framework for CMS Bitrix. Worksolutions company https://worksolutions.ru");
 
 // Замерять время выполнения каждой команды
 // Есть команда help

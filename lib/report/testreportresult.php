@@ -64,4 +64,24 @@ class TestReportResult {
     public function getMessage() {
         return $this->message;
     }
+
+    public function getClass() {
+        return $this->class;
+    }
+
+    public function getMethod() {
+        return $this->method;
+    }
+
+    public function hasExpected() {
+        return true;
+    }
+
+    public function getExpected() {
+
+    }
+
+    public function getActual() {
+
+    }
 }

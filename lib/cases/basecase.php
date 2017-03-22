@@ -1,6 +1,6 @@
 <?php
-
 namespace WS\BUnit\Cases;
+
 use WS\BUnit\Artifacts\Assert;
 
 /**

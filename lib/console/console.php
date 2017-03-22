@@ -9,20 +9,36 @@ use WS\BUnit\Command\HelpCommand;
 use WS\BUnit\Console\Formatter\Output;
 
 class Console {
-    /**
-     * @var resource
-     */
-    private $out;
 
     private $action;
+
+    /**
+     * @var array
+     */
+    private $params;
 
     public function __construct($args) {
         global $APPLICATION;
         $APPLICATION->ConvertCharsetArray($args, "UTF-8", LANG_CHARSET);
         $this->writer = new Writer(new Output(), fopen('php://stdout', 'w'));
+
         array_shift($args);
-        $this->params = $args;
-        $this->action = isset($this->params[0]) ? $this->params[0] : 'help';
+        $this->action = isset($args[0]) ? $args[0] : 'help';
+
+        array_shift($args);
+        $additionalCommand = $args[0];
+        if ($additionalCommand[0] != '-') {
+            $this->params[$additionalCommand] = null;
+        }
+
+        foreach ($args as $argument) {
+            if ($argument[0] !== '-') {
+                continue;
+            }
+            $argument = substr($argument, 1);
+            list($name, $value) = explode("=", $argument);
+            $this->params[$name] = $value;
+        }
     }
 
     private static function commands() {

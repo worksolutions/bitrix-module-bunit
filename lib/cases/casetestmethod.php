@@ -28,7 +28,7 @@ class CaseTestMethod {
     }
 
     public function isSkip() {
-        return true;
+        return $this->isSkip;
     }
 
     public function getLabels() {
