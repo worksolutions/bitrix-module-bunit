@@ -1,13 +1,31 @@
 <?php
 namespace WS\BUnit\Command;
 
+use Bitrix\Main\Entity\Event;
+use Bitrix\Main\EventManager;
 use WS\BUnit\Console\Formatter\Output;
+use WS\BUnit\DB\Config;
+use WS\BUnit\DB\Dumper;
 
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
 class DBCommand extends BaseCommand {
     const METHOD_COPY = "copy";
+
+    /**
+     * @var Dumper
+     */
+    private $dumper;
+
+    protected function init() {
+        $em = EventManager::getInstance();
+        $event = new Event("ws.bunit", "OnDbRun");
+        $config =  new Config();
+        $event->setParameter("config", $config);
+        $em->send($event);
+        $this->dumper = new Dumper($config);
+    }
 
     public function execute() {
         switch ($this->getMethod()) {
@@ -24,6 +42,7 @@ class DBCommand extends BaseCommand {
 
     private function executeCopy() {
         $writer = $this->getConsole()->getWriter();
+        $this->dumper->copy();
         $writer->printLine("action of copy dump");
         $writer->printLine("result of copy");
     }

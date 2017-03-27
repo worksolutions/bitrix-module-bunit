@@ -12,6 +12,7 @@ abstract class BaseCommand {
      * @var array
      */
     private $params;
+
     /**
      * @var Console
      */
@@ -22,7 +23,7 @@ abstract class BaseCommand {
      */
     private $method;
 
-    public function __construct(array $params, Console $console) {
+    final public function __construct(array $params, Console $console) {
         $this->params = $params;
         list($name, $value) = each($this->params);
         if ($value === null) {

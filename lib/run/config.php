@@ -3,9 +3,9 @@
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
 
-namespace WS\BUnit;
+namespace WS\BUnit\Run;
 
-class RunConfig {
+class Config {
 
     /**
      * @var string

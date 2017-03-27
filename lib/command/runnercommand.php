@@ -9,7 +9,7 @@ use WS\BUnit\Cases\CaseInvoker;
 use WS\BUnit\Console\Formatter\Output;
 use WS\BUnit\Report\TestReport;
 use WS\BUnit\Report\TestReportResult;
-use WS\BUnit\RunConfig;
+use WS\BUnit\Run\Config;
 
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
@@ -17,7 +17,7 @@ use WS\BUnit\RunConfig;
 class RunnerCommand extends BaseCommand {
 
     /**
-     * @var RunConfig
+     * @var Config
      */
     private $config;
 
@@ -31,10 +31,10 @@ class RunnerCommand extends BaseCommand {
      */
     private $report;
 
-    public function execute() {
+    protected function init() {
         $em = EventManager::getInstance();
         $event = new Event("ws.bunit", "OnTestRun");
-        $this->config =  new RunConfig;
+        $this->config =  new Config();
         $event->setParameter("config", $this->config);
         $em->send($event);
 
@@ -42,7 +42,12 @@ class RunnerCommand extends BaseCommand {
             $this->viewEmpty();
             return;
         }
+    }
 
+    /**
+     *
+     */
+    public function execute() {
         $this->initTests();
         $this->runTests();
         $this->viewReport();
