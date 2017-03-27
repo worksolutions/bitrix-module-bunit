@@ -3,6 +3,7 @@ namespace WS\BUnit\Command;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
+use WS\BUnit\Artifacts\ValueDumper;
 use WS\BUnit\Cases\BaseCase;
 use WS\BUnit\Cases\CaseInvoker;
 use WS\BUnit\Console\Formatter\Output;
@@ -111,9 +112,7 @@ class RunnerCommand extends BaseCommand {
                     $writer->printChars(".");
                     break;
             }
-
         }
-
     }
 
     private function viewReport() {
@@ -143,6 +142,15 @@ class RunnerCommand extends BaseCommand {
             }
             $writer->setColor(Output::COLOR_RED)->printLine($number.") ".$result->getClass()."::".$result->getMethod());
             $writer->setColor(0)->printLine($message);
+
+            if ($result->hasExpected()) {
+                $writer->setColor(Output::COLOR_YELLOW)->printLine("Actual: ".(ValueDumper::value($result->getExpected())->toString()));
+                if ($result->getExpected() !== $result->getActual()) {
+                    $writer->setColor(Output::COLOR_YELLOW)->printLine("Expected: ".(ValueDumper::value($result->getExpected())->toString()));
+                }
+                $writer->setColor(0);
+            }
+
             $writer->nextLine();
             $number++;
         }

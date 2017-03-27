@@ -6,6 +6,7 @@
 namespace WS\BUnit\Cases;
 
 use WS\BUnit\Artifacts\Assert;
+use WS\BUnit\Artifacts\AssertionException;
 use WS\BUnit\Report\TestReport;
 use WS\BUnit\Report\TestReportResult;
 
@@ -48,6 +49,11 @@ class CaseInvoker {
             try {
                 $this->class->getMethod($method->getName())->invoke($case);
                 $result->setResult(TestReportResult::RESULT_SUCCESS);
+            } catch (AssertionException $e) {
+                $result->setResult(TestReportResult::RESULT_ERROR, $e->getMessage());
+                if ($e->hasMeasures()) {
+                    $result->setMeasures($e->getExpectedValue(), $e->getActualValue());
+                }
             } catch (\Exception $e) {
                 $result->setResult(TestReportResult::RESULT_ERROR, $e->getMessage());
             }

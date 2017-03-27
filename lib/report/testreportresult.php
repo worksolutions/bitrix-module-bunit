@@ -32,6 +32,21 @@ class TestReportResult {
     private $method;
 
     /**
+     * @var mixed
+     */
+    private $actual;
+
+    /**
+     * @var mixed
+     */
+    private $expected;
+
+    /**
+     * @var bool
+     */
+    private $hasMeasures = false;
+
+    /**
      * TestReportResult constructor.
      * @param string $class
      * @param string $method
@@ -53,6 +68,12 @@ class TestReportResult {
         $this->result = $result;
         $this->message = $message;
     }
+    
+    public function setMeasures($expected, $actual) {
+        $this->hasMeasures = true;
+        $this->expected = $expected;
+        $this->actual = $actual;
+    }
 
     /**
      * @return int
@@ -61,27 +82,45 @@ class TestReportResult {
         return $this->result;
     }
 
+    /**
+     * @return string
+     */
     public function getMessage() {
         return $this->message;
     }
 
+    /**
+     * @return String
+     */
     public function getClass() {
         return $this->class;
     }
 
+    /**
+     * @return String
+     */
     public function getMethod() {
         return $this->method;
     }
 
+    /**
+     * @return bool
+     */
     public function hasExpected() {
-        return true;
+        return $this->hasMeasures;
     }
 
+    /**
+     * @return mixed
+     */
     public function getExpected() {
-
+        return $this->expected;
     }
 
+    /**
+     * @return mixed
+     */
     public function getActual() {
-
+        return $this->actual;
     }
 }
