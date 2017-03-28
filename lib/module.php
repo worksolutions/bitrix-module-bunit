@@ -82,4 +82,11 @@ class Module {
         }
         return $name;
     }
+
+    /**
+     * @return string
+     */
+    static public function getBitrixPath() {
+        return realpath(__DIR__."/../../../../bitrix");
+    }
 }

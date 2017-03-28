@@ -7,4 +7,9 @@ namespace WS\BUnit\Invokers;
  */
 class AgentInvoker extends BaseInvoker {
 
+    public function __construct($evalSubstring) {
+    }
+
+    public function execute() {
+    }
 }

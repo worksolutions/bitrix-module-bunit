@@ -3,6 +3,6 @@
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
-class FixtureBuilder {
-
+interface FixtureBuilder {
+    public function build();
 }

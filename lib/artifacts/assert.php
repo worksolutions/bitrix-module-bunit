@@ -7,22 +7,22 @@ namespace WS\BUnit\Artifacts;
 class Assert {
 
     /**
-     * @param $message
+     * @param $errorMessage
      * @return AssertionException
      */
-    private function exception($message) {
-        return new AssertionException($message);
+    private function exception($errorMessage) {
+        return new AssertionException($errorMessage);
     }
 
     /**
      * @param $actual
      * @param $expects
-     * @param string $message
+     * @param string $errorMessage
      * @throws AssertionException
      */
-    public function equal($actual, $expects,  $message = "") {
+    public function equal($actual, $expects,  $errorMessage = "") {
         if ($actual != $expects) {
-            throw $this->exception($message ? $message : "Expected value is not equal with actual.")
+            throw $this->exception($errorMessage ? $errorMessage : "Expected value is not equal with actual.")
                 ->setMeasures($actual, $expects);
         }
     }
@@ -30,12 +30,12 @@ class Assert {
     /**
      * @param $actual
      * @param $expects
-     * @param string $message
+     * @param string $errorMessage
      * @throws AssertionException
      */
-    public function same($actual, $expects,  $message = "") {
+    public function same($actual, $expects,  $errorMessage = "") {
         if ($actual !== $expects) {
-            throw $this->exception($message ? $message : "Expected value is not equal with actual.")
+            throw $this->exception($errorMessage ? $errorMessage : "Expected value is not equal with actual.")
                 ->setMeasures($actual, $expects);
         }
     }
@@ -43,48 +43,48 @@ class Assert {
     /**
      * @param $actual
      * @param $expects
-     * @param string $message
+     * @param string $errorMessage
      * @throws AssertionException
      */
-    public function notEqual($actual, $expects, $message = "") {
+    public function notEqual($actual, $expects, $errorMessage = "") {
         if ($actual == $expects) {
-            throw $this->exception($message ? $message : "Expected value is equal with actual.")
+            throw $this->exception($errorMessage ? $errorMessage : "Expected value is equal with actual.")
                 ->setMeasures($actual, $expects);
         }
     }
 
     /**
      * @param $actual
-     * @param string $message
+     * @param string $errorMessage
      * @throws AssertionException
      */
-    public function asTrue($actual, $message = "") {
+    public function asTrue($actual, $errorMessage = "") {
         if ($actual !== true) {
-            throw $this->exception($message ? $message : "Value is not a true.")
+            throw $this->exception($errorMessage ? $errorMessage : "Value is not a true.")
                 ->setMeasures($actual);
         }
     }
 
     /**
      * @param $actual
-     * @param string $message
+     * @param string $errorMessage
      * @throws AssertionException
      */
-    public function asFalse($actual, $message = "") {
+    public function asFalse($actual, $errorMessage = "") {
         if ($actual !== false) {
-            throw $this->exception($message ? $message : "Value is not a false.")
+            throw $this->exception($errorMessage ? $errorMessage : "Value is not a false.")
                 ->setMeasures($actual);
         }
     }
 
     /**
      * @param $actual
-     * @param string $message
+     * @param string $errorMessage
      * @throws AssertionException
      */
-    public function asEmpty($actual, $message = "") {
+    public function asEmpty($actual, $errorMessage = "") {
         if (!empty($actual)) {
-            throw $this->exception($message ? $message : "Value is not empty.")
+            throw $this->exception($errorMessage ? $errorMessage : "Value is not empty.")
                 ->setMeasures($actual);
         }
     }
@@ -92,21 +92,21 @@ class Assert {
     /**
      * @param $actual
      * @param array $expected
-     * @param string $message
+     * @param string $errorMessage
      * @throws AssertionException
      */
-    public function in($actual, array $expected, $message = "") {
+    public function in($actual, array $expected, $errorMessage = "") {
         if (!in_array($actual, $expected)) {
-            throw $this->exception($message ? $message : "Actual value is not in expected list.")
+            throw $this->exception($errorMessage ? $errorMessage : "Actual value is not in expected list.")
                 ->setMeasures($actual);
         }
     }
 
     /**
-     * @param $message
+     * @param $errorMessage
      * @throws AssertionException
      */
-    public function fail($message) {
-        throw $this->exception($message);
+    public function fail($errorMessage) {
+        throw $this->exception($errorMessage);
     }
 }

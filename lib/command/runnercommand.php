@@ -99,6 +99,7 @@ class RunnerCommand extends BaseCommand {
         }
 
         $writer = $this->getConsole()->getWriter();
+        $writer->nextLine();
         $countInLine = 25;
         $counter = 0;
         foreach ($this->report->getResults() as $result) {
@@ -118,13 +119,15 @@ class RunnerCommand extends BaseCommand {
                     break;
             }
         }
+        if ($counter % $countInLine != 0) {
+            $writer->nextLine();
+        }
     }
 
     private function viewReport() {
         // view errors of exceptions or fails
 
         $writer = $this->getConsole()->getWriter();
-        $writer->nextLine();
         $writer->nextLine();
 
         if (!$this->report->isSuccess()) {
@@ -136,8 +139,14 @@ class RunnerCommand extends BaseCommand {
         }
         $writer->nextLine();
 
-        $writer->setColor(0)->printLine("Errors:");
-        $writer->nextLine();
+        $this->printErrors();
+    }
+
+    private function printErrors() {
+        if ($this->report->isSuccess()) {
+            return;
+        }
+        $writer = $this->getConsole()->getWriter();
 
         $number = 1;
         foreach ($this->report->getResults() as $result) {
@@ -149,7 +158,7 @@ class RunnerCommand extends BaseCommand {
             $writer->setColor(0)->printLine($message);
 
             if ($result->hasExpected()) {
-                $writer->setColor(Output::COLOR_YELLOW)->printLine("Actual: ".(ValueDumper::value($result->getExpected())->toString()));
+                $writer->setColor(Output::COLOR_YELLOW)->printLine("Actual: ".(ValueDumper::value($result->getActual())->toString()));
                 if ($result->getExpected() !== $result->getActual()) {
                     $writer->setColor(Output::COLOR_YELLOW)->printLine("Expected: ".(ValueDumper::value($result->getExpected())->toString()));
                 }

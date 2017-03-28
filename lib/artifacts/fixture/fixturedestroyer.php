@@ -3,6 +3,6 @@
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
-class FixtureDestroyer {
-
+interface FixtureDestroyer {
+    public function destroy();
 }

@@ -28,6 +28,7 @@ class Config {
         $this->caseFolder = $path;
     }
 
+
     /**
      * @return string
      */

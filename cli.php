@@ -21,10 +21,14 @@ $console->getWriter()
     ->printLine("xUnit framework for CMS Bitrix. Worksolutions company https://worksolutions.ru");
 
 // Замерять время выполнения каждой команды
-// Есть команда help
-
 $console->getCommand()->execute();
 $console->getWriter()
-    ->setColor(\WS\BUnit\Console\Formatter\Output::COLOR_RED)
-    ->printLine(sprintf("\nTime: %0.3f sec\n", microtime(true) - $time));
-
+    ->setColor(0)
+    ->printLine("--------------------------------------------------")
+    ->printLine(
+        sprintf(
+            "Time: %0.3f sec, maximum memory usage: %0.2f Mb",
+            microtime(true) - $time,
+            memory_get_peak_usage()/1024/1024
+        )
+    );
