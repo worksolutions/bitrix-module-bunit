@@ -24,7 +24,9 @@ $console->getWriter()
 $console->getCommand()->execute();
 $console->getWriter()
     ->setColor(0)
-    ->printLine("--------------------------------------------------")
+    ->printLine(
+        "--------------------------------------------------"
+    )
     ->printLine(
         sprintf(
             "Time: %0.3f sec, maximum memory usage: %0.2f Mb",
