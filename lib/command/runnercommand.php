@@ -44,9 +44,6 @@ class RunnerCommand extends BaseCommand {
         }
     }
 
-    /**
-     *
-     */
     public function execute() {
         $this->initTests();
         $this->runTests();
@@ -79,15 +76,20 @@ class RunnerCommand extends BaseCommand {
             include $file->getPathname();
         }
 
+        $onlyClass = $this->getParam("class");
+
         foreach(get_declared_classes() as $className ){
             if(!is_subclass_of($className, BaseCase::className()) ) {
+                continue;
+            }
+            if ($onlyClass && strpos($className, $onlyClass) === false) {
                 continue;
             }
             $refClass = new \ReflectionClass($className);
             if ($refClass->isAbstract()) {
                 continue;
             }
-            $this->caseInvokers[] = $this->createCaseInvoker($refClass);
+            $this->caseInvokers[] = $this->createCaseInvoker($refClass, $this->getLabels());
         }
         $this->report = new TestReport();
     }
@@ -131,11 +133,11 @@ class RunnerCommand extends BaseCommand {
         $writer->nextLine();
 
         if (!$this->report->isSuccess()) {
-            $writer->setColor(Output::COLOR_RED)->printLine(sprintf("Test failed. %s of %s have been with error.", $this->report->errorCount(), $this->report->count()));
+            $writer->setColor(Output::COLOR_RED)->printLine(sprintf("Test failed. %s of %s with error.", $this->report->errorCount(), $this->report->count()));
         } else if ($this->report->isSkip()) {
-            $writer->setColor(Output::COLOR_YELLOW)->printLine(sprintf("Test was not absolutely right. %s tests of %s have been skipped.", $this->report->skippedCount(), $this->report->count()));
+            $writer->setColor(Output::COLOR_YELLOW)->printLine(sprintf("Test was not absolutely right. %s of %s skipped.", $this->report->skippedCount(), $this->report->count()));
         } else {
-            $writer->setColor(Output::COLOR_GREEN)->printLine(sprintf("Test success. %s tests.", $this->report->count()));
+            $writer->setColor(Output::COLOR_GREEN)->printLine(sprintf("Test success. Count tests: %s.", $this->report->count()));
         }
         $writer->nextLine();
 
@@ -172,9 +174,19 @@ class RunnerCommand extends BaseCommand {
 
     /**
      * @param $refClass
+     * @param array $labels
      * @return CaseInvoker
      */
-    private function createCaseInvoker($refClass) {
-        return new CaseInvoker($refClass);
+    private function createCaseInvoker($refClass, array $labels) {
+        $invoker = new CaseInvoker($refClass);
+        $invoker->setLabels($labels);
+        return $invoker;
+    }
+
+    /**
+     * @return array
+     */
+    private function getLabels() {
+        return (array) $this->getParam("label");
     }
 }

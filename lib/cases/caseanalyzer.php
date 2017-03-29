@@ -21,7 +21,7 @@ class CaseAnalyzer {
     /**
      * @var array
      */
-    private $labels;
+    private $labels = array();
 
     /**
      * @var string
@@ -57,7 +57,14 @@ class CaseAnalyzer {
             }
             $methodSkip = static::getFromBlock("skip", $methodCommentData) !== null;
             $labels = static ::getMultipleFromBlock("label", $methodCommentData);
-            $this->methods[] = new CaseTestMethod($method->getName(), $methodSkip, $labels);
+            $method = new CaseTestMethod($method->getName(), $methodSkip, $labels);
+            if ($throws = static::getFromBlock("throws", $methodCommentData)) {
+                $method->setExpectedException($throws[0]);
+            }
+            if ($dataProvider = static::getFromBlock("dataProvider", $methodCommentData)) {
+                $method->setDataProvider($dataProvider[0]);
+            }
+            $this->methods[] = $method;
         }
     }
 
@@ -79,7 +86,7 @@ class CaseAnalyzer {
      * @return array
      */
     public function getLabels() {
-        return $this->labels;
+         return $this->labels;
     }
 
     /**
@@ -120,6 +127,7 @@ class CaseAnalyzer {
      */
     private static function getFromBlock($param, $data) {
         foreach ($data as $line) {
+            $line = array_filter($line);
             if ($line[0] == $param) {
                 array_shift($line);
                 return $line;
@@ -136,6 +144,7 @@ class CaseAnalyzer {
     private static function getMultipleFromBlock($param, $data) {
         $res = array();
         foreach ($data as $line) {
+            $line = array_filter($line);
             if ($line[0] != $param) {
                 continue;
             }
