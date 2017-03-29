@@ -6,6 +6,8 @@
 
 namespace WS\BUnit\DB;
 
+use Bitrix\Main\Application;
+
 class Connection {
 
     /**
@@ -68,5 +70,44 @@ class Connection {
      */
     public function getDb() {
         return $this->db;
+    }
+
+    public function useIt() {
+        $connection = Application::getInstance()->getConnection();
+        if ($connection->getDbName() == $this->db) {
+            return;
+        }
+
+        $connection->disconnect();
+
+        $dbHostProperty = new \ReflectionProperty($connection, "dbHost");
+        $dbHostProperty->setAccessible(true);
+        $dbHostProperty->setValue($this->getHost());
+
+        $dbNameProperty = new \ReflectionProperty($connection, "dbName");
+        $dbNameProperty->setAccessible(true);
+        $dbNameProperty->setValue($this->getDb());
+
+        $dbLoginProperty = new \ReflectionProperty($connection, "dbLogin");
+        $dbLoginProperty->setAccessible(true);
+        $dbLoginProperty->setValue($this->getUser());
+
+        $dbPasswordProperty = new \ReflectionProperty($connection, "dbPassword");
+        $dbPasswordProperty->setAccessible(true);
+        $dbPasswordProperty->setValue($this->getPass());
+
+        $connection->connect();
+
+        /**
+         * @var \CDatabase
+         */
+        global $DB;
+        $DB->Disconnect();
+        $DB->Connect(
+            $this->getHost(),
+            $this->getDb(),
+            $this->getUser(),
+            $this->getPass()
+        );
     }
 }

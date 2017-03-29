@@ -30,6 +30,11 @@ class Config {
     /**
      * @var string
      */
+    private $baseCharset;
+
+    /**
+     * @var string
+     */
     private $testHost;
 
     /**
@@ -48,16 +53,22 @@ class Config {
     private $testDB;
 
     /**
+     * @var string
+     */
+    private $testCharset;
+
+    /**
      * @param $host
      * @param $user
      * @param $pass
      * @param $db
      */
-    public function setBaseConnection($host, $user, $pass, $db) {
+    public function setBaseConnection($host, $user, $pass, $db, $charset = "utf8") {
         $this->baseHost = $host;
         $this->baseUser = $user;
         $this->basePass = $pass;
         $this->baseDB = $db;
+        $this->baseCharset = $charset;
     }
 
     /**
@@ -66,11 +77,12 @@ class Config {
      * @param $pass
      * @param $db
      */
-    public function setTestConnection($host, $user, $pass, $db) {
+    public function setTestConnection($host, $user, $pass, $db, $charset = "utf8") {
         $this->testHost = $host;
         $this->testUser = $user;
         $this->testPass = $pass;
         $this->testDB = $db;
+        $this->testCharset = $charset;
     }
 
     /**

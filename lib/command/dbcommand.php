@@ -1,7 +1,8 @@
 <?php
+
 namespace WS\BUnit\Command;
 
-use Bitrix\Main\Entity\Event;
+use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
 use WS\BUnit\Console\Formatter\Output;
 use WS\BUnit\DB\Config;
@@ -11,7 +12,7 @@ use WS\BUnit\DB\Dumper;
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
 class DBCommand extends BaseCommand {
-    const METHOD_COPY = "copy";
+    const METHOD_CREATE = "create";
 
     /**
      * @var Dumper
@@ -24,13 +25,19 @@ class DBCommand extends BaseCommand {
         $config =  new Config();
         $event->setParameter("config", $config);
         $em->send($event);
-        $this->dumper = new Dumper($config);
+
+        $this->dumper = new Dumper($config->getBaseConnection());
+        $writer = $this->getConsole()->getWriter();
+        $this->dumper->setEchoWriter($writer);
     }
 
     public function execute() {
         switch ($this->getMethod()) {
-            case "copy" :
-                $this->executeCopy();
+            case "create" :
+                $this->executeCreate();
+                break;
+            case "update" :
+                $this->executeUpdate();
                 break;
             default :
                 $writer = $this->getConsole()->getWriter();
@@ -40,10 +47,11 @@ class DBCommand extends BaseCommand {
         }
     }
 
-    private function executeCopy() {
-        $writer = $this->getConsole()->getWriter();
-        $this->dumper->copy();
-        $writer->printLine("action of copy dump");
-        $writer->printLine("result of copy");
+    private function executeCreate() {
+        $this->dumper->create();
+    }
+
+    private function executeUpdate() {
+        $this->dumper->update();
     }
 }

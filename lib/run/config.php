@@ -5,6 +5,8 @@
 
 namespace WS\BUnit\Run;
 
+use WS\BUnit\DB\Connection;
+
 class Config {
 
     /**
@@ -13,7 +15,7 @@ class Config {
     private $caseFolder;
 
     /**
-     * @var array
+     * @var Connection
      */
     private $db;
 
@@ -43,6 +45,13 @@ class Config {
      * @param $dbUserPass
      */
     public function setTestDBParams($host, $db, $dbUser, $dbUserPass) {
-        $this->db = func_get_args();
+        $this->db = new Connection($host, $dbUser, $dbUserPass, $db);
+    }
+
+    /**
+     * @return Connection
+     */
+    public function getDBConnection() {
+        return $this->db;
     }
 }

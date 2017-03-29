@@ -61,6 +61,9 @@ class Console {
         return $this;
     }
 
+    /**
+     * @return Writer
+     */
     public function getWriter() {
         return $this->writer;
     }

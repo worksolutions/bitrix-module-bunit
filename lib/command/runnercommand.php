@@ -42,6 +42,8 @@ class RunnerCommand extends BaseCommand {
             $this->viewEmpty();
             return;
         }
+
+        $this->config->getDBConnection()->useIt();
     }
 
     public function execute() {
