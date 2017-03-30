@@ -13,7 +13,7 @@ class HelpCommand extends BaseCommand {
         $consoleWriter = $this->getConsole()->getWriter();
         $consoleWriter->nextLine();
         $consoleWriter->setColor(Output::COLOR_YELLOW)->printLine("Usage:");
-        $consoleWriter->setColor(0)->printLine("   php bunit.php <command> [arg1] [arg2] ...");
+        $consoleWriter->setColor(0)->printLine("   php bunit.php <command> [<method>] [arg1] [arg2] ...");
         $consoleWriter->nextLine();
 
         $consoleWriter->setColor(Output::COLOR_YELLOW)->printChars("Help command:");
@@ -25,17 +25,18 @@ class HelpCommand extends BaseCommand {
         $consoleWriter->setColor(Output::COLOR_YELLOW)->printChars("Command run:");
         $consoleWriter->setColor(0)->printLine(" Runs testing process");
         $consoleWriter->nextLine();
-        $consoleWriter->setColor(Output::COLOR_GREEN)->printLine("   php bunit.php run [-<scope>] [-<tagN>]");
-        $consoleWriter->setColor(0)->printLine("     - [-<scope>]       Type of testcases which are declared in project");
-        $consoleWriter->setColor(0)->printLine("     - [-<tag>]         Test tags");
+        $consoleWriter->setColor(Output::COLOR_GREEN)->printLine("   php bunit.php run [-<label>] [-<class>]");
+        $consoleWriter->setColor(0)->printLine("     - [-<label>]       Includes tests which only have that label");
+        $consoleWriter->setColor(0)->printLine("     - [-<class>]       Runs test only for pointed class");
         $consoleWriter->nextLine();
 
         $consoleWriter->setColor(Output::COLOR_YELLOW)->printChars("Command db:");
-        $consoleWriter->setColor(0)->printLine(" Works with project fixtures");
+        $consoleWriter->setColor(0)->printLine(" Provides several helpful functions");
         $consoleWriter->nextLine();
-        $consoleWriter->setColor(Output::COLOR_GREEN)->printLine("   php bunit.php db -method=<method>");
-        $consoleWriter->setColor(0)->printLine("     -method=copy       Type of testcases which are declared in project");
-        $consoleWriter->setColor(0)->printLine("     -method=copy       Test tags");
+        $consoleWriter->setColor(Output::COLOR_GREEN)->printLine("   php bunit.php db <method>");
+        $consoleWriter->setColor(0)->printLine("   Methods:");
+        $consoleWriter->setColor(0)->printLine("     create       Creates mysql dump from original DB into system temporary file");
+        $consoleWriter->setColor(0)->printLine("     update       Updates test DB from dump file");
         $consoleWriter->nextLine();
         $consoleWriter->nextLine();
     }
