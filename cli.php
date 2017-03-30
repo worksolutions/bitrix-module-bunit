@@ -1,4 +1,8 @@
 <?php
+use Bitrix\Main\Event;
+use Bitrix\Main\EventManager;
+use WS\BUnit\Config;
+
 $DOCUMENT_ROOT = $_SERVER["DOCUMENT_ROOT"];
 
 define("NO_KEEP_STATISTIC", true);
@@ -14,14 +18,26 @@ $USER->Authorize(1);
 
 CModule::IncludeModule('ws.bunit');
 
-$console = new \WS\BUnit\Console\Console($argv);
+$em = EventManager::getInstance();
+$event = new Event("ws.bunit", "OnConfigure");
+$config =  new Config();
+$event->setParameter("config", $config);
+$em->send($event);
 
-$console->getWriter()
-    ->setColor(0)
-    ->printLine("xUnit framework for CMS Bitrix. Worksolutions company https://worksolutions.ru");
+try {
+    $console = new \WS\BUnit\Console\Console($argv, $config);
 
-// «амер€ть врем€ выполнени€ каждой команды
-$console->getCommand()->execute();
+    $console->getWriter()
+        ->setColor(0)
+        ->printLine("xUnit framework for CMS Bitrix. Worksolutions company https://worksolutions.ru");
+
+    $console->getCommand()->execute();
+
+} catch (Exception $e) {
+    $console->getWriter()
+        ->setColor(\WS\BUnit\Console\Formatter\Output::COLOR_RED)
+        ->printLine($e->getMessage());
+}
 $console->getWriter()
     ->setColor(0)
     ->printLine(

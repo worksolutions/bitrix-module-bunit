@@ -6,6 +6,7 @@ use WS\BUnit\Command\BaseCommand;
 use WS\BUnit\Command\DBCommand;
 use WS\BUnit\Command\RunnerCommand;
 use WS\BUnit\Command\HelpCommand;
+use WS\BUnit\Config;
 use WS\BUnit\Console\Formatter\Output;
 
 class Console {
@@ -17,7 +18,12 @@ class Console {
      */
     private $params;
 
-    public function __construct($args) {
+    /**
+     * @var Config
+     */
+    private $config;
+
+    public function __construct($args, Config $config) {
         global $APPLICATION;
         $APPLICATION->ConvertCharsetArray($args, "UTF-8", LANG_CHARSET);
         $this->writer = new Writer(new Output(), fopen('php://stdout', 'w'));
@@ -39,6 +45,7 @@ class Console {
             list($name, $value) = explode("=", $argument);
             $this->params[$name] = $value;
         }
+        $this->config = $config;
     }
 
     private static function commands() {
@@ -92,6 +99,7 @@ class Console {
         if (!$commands[$this->action]) {
             throw new ConsoleException("Action `{$this->action}` is not supported");
         }
-        return new $commands[$this->action]($this->params, $this);
+        return new $commands[$this->action]($this->params, $this, $this->config);
     }
+
 }

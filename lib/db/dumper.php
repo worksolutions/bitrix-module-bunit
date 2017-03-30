@@ -250,10 +250,4 @@ class Dumper {
         }
         $this->echoWriter->printChars($sql);
     }
-
-    public function update() {
-        if (!file_exists($this->getFilePath())) {
-            throw new \Exception("Sql file `{$this->getFilePath()}` is not exist");
-        }
-    }
 }

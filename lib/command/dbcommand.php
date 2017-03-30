@@ -2,11 +2,10 @@
 
 namespace WS\BUnit\Command;
 
-use Bitrix\Main\Event;
-use Bitrix\Main\EventManager;
 use WS\BUnit\Console\Formatter\Output;
-use WS\BUnit\DB\Config;
+use WS\BUnit\DB\Connection;
 use WS\BUnit\DB\Dumper;
+use WS\BUnit\DB\Updater;
 
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
@@ -19,16 +18,37 @@ class DBCommand extends BaseCommand {
      */
     private $dumper;
 
-    protected function init() {
-        $em = EventManager::getInstance();
-        $event = new Event("ws.bunit", "OnDbRun");
-        $config =  new Config();
-        $event->setParameter("config", $config);
-        $em->send($event);
+    /**
+     * @var Updater
+     */
+    private $updater;
 
-        $this->dumper = new Dumper($config->getBaseConnection());
+    protected function init() {
+        $originalDbParams = $this->getConfig()->getOriginalDbConfig();
+        $this->dumper = new Dumper(
+            new Connection(
+                $originalDbParams['host'],
+                $originalDbParams['user'],
+                $originalDbParams['password'],
+                $originalDbParams['db']
+            ),
+            $originalDbParams['charset'] ?: "utf8"
+        );
+
         $writer = $this->getConsole()->getWriter();
         $this->dumper->setEchoWriter($writer);
+
+        $testDbParams = $this->getConfig()->getTestDbConfig();
+        $this->updater = new Updater(
+            new Connection(
+                $testDbParams['host'],
+                $testDbParams['user'],
+                $testDbParams['password'],
+                $testDbParams['db']
+            ),
+            $testDbParams['charset'] ?: "utf8"
+        );
+        $this->updater->setEchoWriter($writer);
     }
 
     public function execute() {
@@ -52,6 +72,7 @@ class DBCommand extends BaseCommand {
     }
 
     private function executeUpdate() {
-        $this->dumper->update();
+        $file = $this->dumper->getFilePath();
+        $this->updater->update($file);
     }
 }

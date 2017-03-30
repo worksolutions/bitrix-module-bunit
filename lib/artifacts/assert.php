@@ -61,7 +61,7 @@ class Assert {
     public function asTrue($actual, $errorMessage = "") {
         if ($actual !== true) {
             throw $this->exception($errorMessage ? $errorMessage : "Value is not a true.")
-                ->setMeasures($actual);
+                ->setMeasures($actual, true);
         }
     }
 
@@ -73,7 +73,7 @@ class Assert {
     public function asFalse($actual, $errorMessage = "") {
         if ($actual !== false) {
             throw $this->exception($errorMessage ? $errorMessage : "Value is not a false.")
-                ->setMeasures($actual);
+                ->setMeasures($actual, false);
         }
     }
 
@@ -85,7 +85,7 @@ class Assert {
     public function asEmpty($actual, $errorMessage = "") {
         if (!empty($actual)) {
             throw $this->exception($errorMessage ? $errorMessage : "Value is not empty.")
-                ->setMeasures($actual);
+                ->setMeasures($actual, null);
         }
     }
 
@@ -98,7 +98,7 @@ class Assert {
     public function in($actual, array $expected, $errorMessage = "") {
         if (!in_array($actual, $expected)) {
             throw $this->exception($errorMessage ? $errorMessage : "Actual value is not in expected list.")
-                ->setMeasures($actual);
+                ->setMeasures($actual, $expected);
         }
     }
 

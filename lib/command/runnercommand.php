@@ -1,25 +1,18 @@
 <?php
 namespace WS\BUnit\Command;
 
-use Bitrix\Main\Event;
-use Bitrix\Main\EventManager;
 use WS\BUnit\Artifacts\ValueDumper;
 use WS\BUnit\Cases\BaseCase;
 use WS\BUnit\Cases\CaseInvoker;
 use WS\BUnit\Console\Formatter\Output;
+use WS\BUnit\DB\Connection;
 use WS\BUnit\Report\TestReport;
 use WS\BUnit\Report\TestReportResult;
-use WS\BUnit\Run\Config;
 
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
 class RunnerCommand extends BaseCommand {
-
-    /**
-     * @var Config
-     */
-    private $config;
 
     /**
      * @var CaseInvoker[]
@@ -32,18 +25,15 @@ class RunnerCommand extends BaseCommand {
     private $report;
 
     protected function init() {
-        $em = EventManager::getInstance();
-        $event = new Event("ws.bunit", "OnTestRun");
-        $this->config =  new Config();
-        $event->setParameter("config", $this->config);
-        $em->send($event);
+        $connectionParams = $this->getConfig()->getTestDbConfig();
 
-        if (!$this->config->getCaseFolder()) {
-            $this->viewEmpty();
-            return;
-        }
-
-        $this->config->getDBConnection()->useIt();
+        $connection = new Connection(
+            $connectionParams['host'],
+            $connectionParams['user'],
+            $connectionParams['password'],
+            $connectionParams['db']
+        );
+        //$connection->useIt();
     }
 
     public function execute() {
@@ -59,9 +49,12 @@ class RunnerCommand extends BaseCommand {
         $consoleWriter->nextLine();
     }
 
+    /**
+     * @throws \Exception
+     */
     private function initTests() {
         // include tests files
-        $dir = $this->config->getCaseFolder();
+        $dir = $this->getConfig()->getWorkFolder();
         $directoryIterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \RecursiveIteratorIterator::SELF_FIRST));
         /** @var \SplFileInfo $file */
         foreach ($directoryIterator as $file) {
@@ -92,6 +85,11 @@ class RunnerCommand extends BaseCommand {
                 continue;
             }
             $this->caseInvokers[] = $this->createCaseInvoker($refClass, $this->getLabels());
+        }
+
+        if (count($this->caseInvokers) == 0) {
+            $this->viewEmpty();
+            throw new \Exception("Count of tests is zero!");
         }
         $this->report = new TestReport();
     }

@@ -1,7 +1,9 @@
 <?php
 namespace WS\BUnit\Command;
 
+use WS\BUnit\Config;
 use WS\BUnit\Console\Console;
+use WS\BUnit\Console\Formatter\Output;
 
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
@@ -23,7 +25,12 @@ abstract class BaseCommand {
      */
     private $method;
 
-    final public function __construct(array $params, Console $console) {
+    /**
+     * @var Config
+     */
+    private $config;
+
+    final public function __construct(array $params, Console $console, Config $config) {
         $this->params = $params;
         list($name, $value) = each($this->params);
         if ($value === null) {
@@ -32,6 +39,12 @@ abstract class BaseCommand {
             $this->params[$name] = $value;
         }
         $this->console = $console;
+
+        $this->config = $config;
+        if (!$this->testConfig()) {
+            throw new \Exception("Config is wrong.");
+        }
+
         $this->init();
     }
 
@@ -65,5 +78,26 @@ abstract class BaseCommand {
      */
     public function getParam($name, $default = null) {
         return  $this->params[$name] ? $this->params[$name] : $default;
+    }
+
+    /**
+     * @return Config
+     */
+    public function getConfig() {
+        return $this->config;
+    }
+
+    private function testConfig() {
+        if ($this->config->test()) {
+            return true;
+        }
+
+        $writer = $this->console->getWriter();
+        $writer->setColor(Output::COLOR_RED);
+        $writer->nextLine();
+        foreach ($this->config->getTestErrors() as $error) {
+            $writer->printLine($error);
+        }
+        return false;
     }
 }
