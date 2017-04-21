@@ -1,0 +1,28 @@
+{
+    "name": "worksolutions/bitrix-module-bunit",
+    "description": "xUnit framework for CMS Bitrix",
+    "type": "bitrix-module",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/worksolutions/bitrix-module-bunit/issues",
+        "source": "https://github.com/worksolutions/bitrix-module-bunit"
+    },
+    "authors": [
+        {
+            "name": "Maxim Sokolovsky",
+            "email": "sokolovsky@worksolutions.ru"
+        }
+    ],
+    "extra": {
+        "installer-name": "ws.bunit"
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "composer/installers": "~1"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "php scripts/install.php"
+        ]
+    }
+}

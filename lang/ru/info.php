@@ -2,7 +2,7 @@
 
 return array(
     'name' => 'WS BUnit',
-    'description' => 'Полноценное модульное тестирование проектов CMS Bitrix.',
+    'description' => 'Модульное тестирование проектов CMS Bitrix.',
     'partner' => array(
         'name' => 'Рабочие Решения',
         'url' => 'http://www.worksolutions.ru'
