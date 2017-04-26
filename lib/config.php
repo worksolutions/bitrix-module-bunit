@@ -18,12 +18,20 @@ class Config {
     private $errors = array();
 
     /**
+     * @var Config
+     */
+    private static $defaultObject;
+
+    /**
      * @param $data
      */
     public function set($data) {
         $this->data = $data;
     }
 
+    /**
+     * @return bool
+     */
     public function test() {
         if (!is_dir($this->getWorkFolder())) {
             $this->errors[] = "Test folder `{$this->getWorkFolder()}` doesn`t exist";
@@ -82,5 +90,22 @@ class Config {
      */
     public function getWorkFolder() {
         return $this->data['folder'];
+    }
+
+    /**
+     * @return Config
+     */
+    public static function getDefaultConfig() {
+        if (!static::hasDefaultConfig()) {
+            static::$defaultObject = new static();
+        }
+        return static::$defaultObject;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function hasDefaultConfig() {
+        return !!static::$defaultObject;
     }
 }

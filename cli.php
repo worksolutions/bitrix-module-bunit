@@ -18,6 +18,16 @@ $USER->Authorize(1);
 
 CModule::IncludeModule('ws.bunit');
 
+$configFile = $DOCUMENT_ROOT . BX_ROOT . "/php_interface/bunit/config.php";
+if (file_exists($configFile)) {
+    $fInclude = function () use ($configFile) {
+        global $APPLICATION;
+        global $USER;
+        global $DB;
+        include $configFile;
+    };
+}
+
 $em = EventManager::getInstance();
 $event = new Event("ws.bunit", "OnConfigure");
 $config =  new Config();

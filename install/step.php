@@ -4,4 +4,5 @@ if(!check_bitrix_sessid()) {
     return;
 }
 
-echo CAdminMessage::ShowNote("Модуль bunit установлен. Рабочие решения.");
+$message = ws_bunit::localization()->message("install.success");
+CAdminMessage::ShowNote($message);

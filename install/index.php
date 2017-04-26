@@ -24,7 +24,7 @@ class ws_bunit extends CModule {
     /**
      * @return \WS\BUnit\Localization
      */
-    private function localization() {
+    public static function localization() {
         $localizePath = __DIR__.'/../lang/'.LANGUAGE_ID;
 
         if (!file_exists($localizePath)) {
@@ -51,30 +51,59 @@ class ws_bunit extends CModule {
 
     function InstallFiles() {
         $rootDir = Application::getDocumentRoot().'/'.Application::getPersonalRoot();
-        $adminGatewayFile = '/tools/bunit.php';
-        copy(__DIR__. $adminGatewayFile, $rootDir . $adminGatewayFile);
-        return true;
+
+        $adminGatewayFile = '/tools/bunit';
+        $isSuccess = copy(__DIR__. $adminGatewayFile, $rootDir . $adminGatewayFile);
+
+        $bUnitConfigFolder = '/php_interface/bunit';
+
+        $isSuccess && $isSuccess = mkdir($rootDir . $bUnitConfigFolder, 0664);
+        $isSuccess && $isSuccess = copy(__DIR__. $bUnitConfigFolder, $rootDir . $bUnitConfigFolder . "/config.php");
+        return $isSuccess;
     }
 
     function UnInstallFiles() {
         $rootDir = Application::getDocumentRoot().'/'.Application::getPersonalRoot();
-        $adminGatewayFile = '/tools/bunit.php';
-        unlink($rootDir . $adminGatewayFile);
+
+        $adminGatewayFile = '/tools/bunit';
+        $isSuccess = unlink($rootDir . $adminGatewayFile);
+
+        return $isSuccess;
+    }
+
+    /**
+     * @return bool
+     */
+    public function DoInstall() {
+        global /** @var CMain $APPLICATION */
+        $APPLICATION;
+        RegisterModule($this->MODULE_ID);
+        $installResult = $this->InstallFiles();
+        if (!$installResult) {
+            $APPLICATION->ThrowException($this->localization()->getDataByPath('install.error.files'));
+            return false;
+        }
+
+        CModule::IncludeModule($this->MODULE_ID);
+        $title = $this->localization()->getDataByPath('setup.up');
+        $APPLICATION->IncludeAdminFile($title, __DIR__.'/step.php');
         return true;
     }
 
-    public function DoInstall() {
-        global $APPLICATION;
-        RegisterModule($this->MODULE_ID);
-        $this->InstallFiles();
-        CModule::IncludeModule($this->MODULE_ID);
-        $APPLICATION->IncludeAdminFile($this->localization()->getDataByPath('setup.up'), __DIR__.'/step.php');
-    }
-
+    /**
+     * @return bool
+     */
     public function DoUninstall() {
-        global $APPLICATION;
-        $this->UnInstallFiles();
+        global /** @var CMain $APPLICATION */
+        $APPLICATION;
+        $installResult = $this->UnInstallFiles();
+        if (!$installResult) {
+            $APPLICATION->ThrowException($this->localization()->getDataByPath('uninstall.error.files'));
+            return false;
+        }
         UnRegisterModule($this->MODULE_ID);
-        $APPLICATION->IncludeAdminFile($this->localization()->getDataByPath('setup.down'), __DIR__.'/unstep.php');
+        $title = $this->localization()->getDataByPath('setup.down');
+        $APPLICATION->IncludeAdminFile($title, __DIR__.'/unstep.php');
+        return true;
     }
 }

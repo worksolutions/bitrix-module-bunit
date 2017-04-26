@@ -4,4 +4,5 @@ if(!check_bitrix_sessid()) {
     return;
 }
 
-echo CAdminMessage::ShowNote("Модуль успешно удален из системы");
+$message = ws_bunit::localization()->message("uninstall.success");
+CAdminMessage::ShowNote($message);
