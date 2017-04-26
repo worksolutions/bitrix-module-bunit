@@ -15,7 +15,7 @@ return array(
         'error' => array(
             'files' => 'Failing of placed files `bitrix/php_interface` è `bitrix/tools`, check up writing files'
         ),
-        'success' => 'Module has been installed'
+        'success' => ''
     ),
     'uninstall' => array(
         'error' => array(
