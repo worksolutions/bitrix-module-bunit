@@ -59,6 +59,9 @@ abstract class BaseCommand {
         return get_called_class();
     }
 
+    /**
+     * Hook for children
+     */
     protected function init() {
     }
 

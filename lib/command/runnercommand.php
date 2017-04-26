@@ -26,14 +26,16 @@ class RunnerCommand extends BaseCommand {
 
     protected function init() {
         $connectionParams = $this->getConfig()->getTestDbConfig();
-
+        if (!$connectionParams) {
+            $connectionParams = $this->getConfig()->getOriginalDbConfig();
+        }
         $connection = new Connection(
             $connectionParams['host'],
             $connectionParams['user'],
             $connectionParams['password'],
             $connectionParams['db']
         );
-        //$connection->useIt();
+        $connection->useIt();
     }
 
     public function execute() {

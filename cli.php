@@ -26,11 +26,12 @@ if (file_exists($configFile)) {
         global $DB;
         include $configFile;
     };
+    $fInclude();
 }
 
 $em = EventManager::getInstance();
 $event = new Event("ws.bunit", "OnConfigure");
-$config =  new Config();
+$config =  Config::getDefaultConfig();
 $event->setParameter("config", $config);
 $em->send($event);
 

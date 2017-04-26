@@ -13,17 +13,8 @@ require(__DIR__ . '/../install/index.php');
 global $APPLICATION;
 
 $module = new ws_bunit();
-$module->DoInstall();
 
-$di = new RecursiveDirectoryIterator(__DIR__ . '/../lang');
-
-/** @var SplFileInfo $fileInfo */
-foreach ($di as $fileInfo) {
-    if ($fileInfo->isDir()) {
-        continue;
-    }
-    $content = file_get_contents($fileInfo->getPath());
-    $convertedContent = $APPLICATION->ConvertCharset($content, LANG_CHARSET, "UTF-8");
-    file_put_contents($fileInfo->getPath(), $convertedContent);
-    $fileInfo->getPath();
+$installResult = $module->DoInstall();
+if (!$installResult) {
+    throw new Exception($APPLICATION->GetException()->GetString());
 }

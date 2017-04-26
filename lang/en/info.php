@@ -22,5 +22,6 @@ return array(
             'files' => 'Failing of remove files from `bitrix/tools`, check up remove files from directory'
         ),
         'success' => 'Module has been removed'
-    )
+    ),
+    'charset' => 'charset'
 );

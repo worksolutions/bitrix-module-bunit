@@ -39,6 +39,9 @@ class DBCommand extends BaseCommand {
         $this->dumper->setEchoWriter($writer);
 
         $testDbParams = $this->getConfig()->getTestDbConfig();
+        if (!$testDbParams) {
+            throw new \Exception("DB command is used with test database only");
+        }
         $this->updater = new Updater(
             new Connection(
                 $testDbParams['host'],

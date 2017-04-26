@@ -50,15 +50,17 @@ class Config {
         }
 
         $testDbConfig = $this->getTestDbConfig();
-        $mysqlConnection = new \mysqli(
-            $testDbConfig['host'],
-            $testDbConfig['user'],
-            $testDbConfig['password'],
-            $testDbConfig['db']
-        );
+        if (!empty($testDbConfig)) {
+            $mysqlConnection = new \mysqli(
+                $testDbConfig['host'],
+                $testDbConfig['user'],
+                $testDbConfig['password'],
+                $testDbConfig['db']
+            );
 
-        if ($mysqlConnection->connect_errno) {
-            $this->errors[] = "Test connection." . $mysqlConnection->connect_error;
+            if ($mysqlConnection->connect_errno) {
+                $this->errors[] = "Test connection." . $mysqlConnection->connect_error;
+            }
         }
 
         return empty($this->errors);
