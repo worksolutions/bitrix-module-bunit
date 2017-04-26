@@ -79,9 +79,8 @@ class ws_bunit extends CModule {
         $rootDir = Application::getDocumentRoot().Application::getPersonalRoot();
 
         $adminGatewayFile = '/tools/bunit';
-        $isSuccess = unlink($rootDir . $adminGatewayFile);
-
-        return $isSuccess;
+        unlink($rootDir . $adminGatewayFile);
+        return true;
     }
 
     /**

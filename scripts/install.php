@@ -14,7 +14,12 @@ global $APPLICATION;
 
 $module = new ws_bunit();
 
+ob_start();
 $installResult = $module->DoInstall();
+ob_clean();
+
 if (!$installResult) {
     throw new Exception($APPLICATION->GetException()->GetString());
+} else {
+    echo "Install success\n";
 }
