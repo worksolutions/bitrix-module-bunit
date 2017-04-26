@@ -98,6 +98,7 @@ class ws_bunit extends CModule {
         if (LANG_CHARSET == "UTF-8" && !$this->isUtfLangFiles()) {
             $this->convertLangFilesToUtf();
         }
+
         RegisterModule($this->MODULE_ID);
         CModule::IncludeModule($this->MODULE_ID);
         $title = $this->localization()->getDataByPath('setup.up');
@@ -137,9 +138,9 @@ class ws_bunit extends CModule {
             if ($fileInfo->isDir()) {
                 continue;
             }
-            $content = file_get_contents($fileInfo->getPath());
+            $content = file_get_contents($fileInfo->getRealPath());
             $convertedContent = $APPLICATION->ConvertCharset($content, "windows-1251", "UTF-8");
-            file_put_contents($fileInfo->getPath(), $convertedContent);
+            file_put_contents($fileInfo->getRealPath(), $convertedContent);
         }
     }
 }
