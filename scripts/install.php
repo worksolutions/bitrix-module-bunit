@@ -12,11 +12,9 @@ require(__DIR__ . '/../install/index.php');
 /** @var CMain $APPLICATION */
 global $APPLICATION;
 
-$module = new ws_bunit();
+$module = new ws_bunit(ws_bunit::INSTALL_TYPE_CONSOLE);
 
-ob_start();
 $installResult = $module->DoInstall();
-ob_end_clean();
 
 if (!$installResult) {
     throw new Exception($APPLICATION->GetException()->GetString());

@@ -11,6 +11,10 @@ if (!class_exists('\WS\BUnit\Options')) {
 class ws_bunit extends CModule {
     const FALLBACK_LOCALE = 'ru';
     const MODULE_ID = 'ws.bunit';
+
+    const INSTALL_TYPE_WEB = "web";
+    const INSTALL_TYPE_CONSOLE = "console";
+
     var $MODULE_ID = 'ws.bunit';
     var $MODULE_VERSION;
     var $MODULE_VERSION_DATE;
@@ -20,6 +24,10 @@ class ws_bunit extends CModule {
     var $strError = '';
 
     var $localization;
+    /**
+     * @var null
+     */
+    private $installType;
 
     /**
      * @return bool|string
@@ -41,7 +49,7 @@ class ws_bunit extends CModule {
         return new \WS\BUnit\Localization(require $localizePath.'/info.php');
     }
 
-    public function __construct() {
+    public function __construct($installType = null) {
         $arModuleVersion = array();
         include(dirname(__FILE__) . "/version.php");
         $this->MODULE_VERSION = $arModuleVersion["VERSION"];
@@ -54,6 +62,7 @@ class ws_bunit extends CModule {
         $this->MODULE_DESCRIPTION = $localization->getDataByPath("description");
         $this->PARTNER_NAME = $localization->getDataByPath("partner.name");
         $this->PARTNER_URI = 'http://worksolutions.ru';
+        $this->installType = $installType ? $installType : static::INSTALL_TYPE_WEB;
     }
 
     function InstallFiles() {
@@ -99,9 +108,7 @@ class ws_bunit extends CModule {
         }
 
         RegisterModule($this->MODULE_ID);
-        CModule::IncludeModule($this->MODULE_ID);
-        $title = $this->localization()->getDataByPath('setup.up');
-        $APPLICATION->IncludeAdminFile($title, __DIR__.'/step.php');
+        $this->installReport();
         return true;
     }
 
@@ -140,6 +147,16 @@ class ws_bunit extends CModule {
             $content = file_get_contents($fileInfo->getRealPath());
             $convertedContent = $APPLICATION->ConvertCharset($content, "windows-1251", "UTF-8");
             file_put_contents($fileInfo->getRealPath(), $convertedContent);
+        }
+    }
+
+    private function installReport() {
+        /* @var CMain $APPLICATION */
+        global $APPLICATION;
+        if ($this->installType == static::INSTALL_TYPE_WEB) {
+            CModule::IncludeModule($this->MODULE_ID);
+            $title = $this->localization()->getDataByPath('setup.up');
+            $APPLICATION->IncludeAdminFile($title, __DIR__.'/step.php');
         }
     }
 }
