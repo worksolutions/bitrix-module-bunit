@@ -33,8 +33,8 @@
 
 ![Запуск](doc/img/success-result.png)
 
-#### [Устанавливаем и настраиваем модуль](doc/install.md)
+## [Устанавливаем и настраиваем модуль](doc/install.md)
 
-#### [Пишем тесты](doc/writing.md)
+## [Пишем тесты](doc/writing.md)
 
-#### [Запускаем](doc/running.md)
+## [Запускаем](doc/running.md)
