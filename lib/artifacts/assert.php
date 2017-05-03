@@ -22,7 +22,7 @@ class Assert {
      */
     public function equal($actual, $expects,  $errorMessage = "") {
         if ($actual != $expects) {
-            throw $this->exception($errorMessage ? $errorMessage : "Expected value is not equal with actual.")
+            throw $this->exception($errorMessage ? $errorMessage : "Expected value is not equal with actual one.")
                 ->setMeasures($actual, $expects);
         }
     }
@@ -35,7 +35,7 @@ class Assert {
      */
     public function same($actual, $expects,  $errorMessage = "") {
         if ($actual !== $expects) {
-            throw $this->exception($errorMessage ? $errorMessage : "Expected value is not equal with actual.")
+            throw $this->exception($errorMessage ? $errorMessage : "Expected value is not equal with actual one.")
                 ->setMeasures($actual, $expects);
         }
     }
@@ -48,7 +48,7 @@ class Assert {
      */
     public function notEqual($actual, $expects, $errorMessage = "") {
         if ($actual == $expects) {
-            throw $this->exception($errorMessage ? $errorMessage : "Expected value is equal with actual.")
+            throw $this->exception($errorMessage ? $errorMessage : "Expected value is equal with actual one.")
                 ->setMeasures($actual, $expects);
         }
     }
