@@ -24,7 +24,7 @@ composer run-script post-install-cmd -d bitrix/modules/ws.bunit
 
 ## Marketplace
 
-Модуль доступен, но не опубликован на маркетплейс битрикса. Маркетплейс используется только как площадка установки модуля через web интерфейс.Основной лощадкой поддержки модуля является github.
+Модуль доступен, но не опубликован на маркетплейс Битрикса. Маркетплейс используется только как площадка установки и обновления модуля через web интерфейс.Основной лощадкой поддержки модуля является [github](https://github.com/worksolutions/bitrix-module-bunit/blob/master/readme.md).
 
 Для установки в адресную строку сайта, после доменного имени, прописать:
 
@@ -57,7 +57,7 @@ $config->set(
                 'db' => $DB->DBName,
                 'charset' => $charset
             ),
-            /**
+            /*
             Use it if you have test clone of real database
             'test' => array(
                 'host' => $DB->DBHost,
