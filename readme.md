@@ -16,7 +16,7 @@
     public function iblocksNotEmpty() {
         CModule::IncludeModule("iblock");
         $dbResult = CIBlock::getList(array(), array());
-        $this->getAssert()->asTrue($dbResult->AffectedRowsCount() > 0, "Count of iblocks should be more than 0");
+        $this->getAssert()->asTrue($dbResult->AffectedRowsCount() > 0, "Число инфоблоков должно быть больше нуля");
     }
 
     /**
@@ -24,7 +24,7 @@
      */
     public function hasNewsIblock() {
         $result = CIBlock::getList(array(), array("CODE" => "news"))->fetch();
-        $this->getAssert()->asTrue((bool) $result);
+        $this->getAssert()->asTrue((bool) $result, "Отсутствое инфобцлок новостей");
     }
 
 ```
@@ -39,6 +39,6 @@
 
 #### [Пишем тесты](doc/writing.md)
 
-#### [Запускаем](doc/runnig.md)
+#### [Запускаем](doc/running.md)
 
 #### [Работаем с тестовой средой](doc/using-test-env.md)
