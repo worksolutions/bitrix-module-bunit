@@ -19,14 +19,15 @@ $config->set(
             /**
             Use it if you have test clone of real database
             'test' => array(
-                'host' => 'localhost',
-                'user' => 'root',
-                'password' => '',
-                'db' => 'migrations_test',
-                'charset' => 'cp1251'
+                'host' => $DB->DBHost,
+                'user' => $DB->DBLogin,
+                'password' => $DB->DBPassword,
+                // write name of test database
+                'db' => '',
+                'charset' => $charset
             )
              */
         ),
-        'folder' => __DIR__."/tests",
+        'folder' => __DIR__."/tests"
     )
 );
