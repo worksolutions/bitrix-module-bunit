@@ -1,13 +1,13 @@
 <?php
-/**
- * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
- */
 
 namespace WS\BUnit\Invokers;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
 
+/**
+ * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
+ */
 class EventInvoker extends BaseInvoker {
 
     /**
