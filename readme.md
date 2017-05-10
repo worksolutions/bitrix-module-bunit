@@ -24,7 +24,7 @@
      */
     public function hasNewsIblock() {
         $result = CIBlock::getList(array(), array("CODE" => "news"))->fetch();
-        $this->getAssert()->asTrue((bool) $result, "Отсутствое инфобцлок новостей");
+        $this->getAssert()->asTrue((bool) $result, "Отсутствует инфоблок новостей");
     }
 
 ```
