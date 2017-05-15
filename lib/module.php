@@ -89,4 +89,15 @@ class Module {
     static public function getBitrixPath() {
         return realpath(__DIR__."/../../../../bitrix");
     }
+
+    /**
+     * @param string $path
+     * @throws \Exception
+     */
+    static public function safeInclude($path) {
+        if (!file_exists($path) || is_dir($path)) {
+            throw new \Exception("Path of include file is wrong");
+        }
+        include $path;
+    }
 }

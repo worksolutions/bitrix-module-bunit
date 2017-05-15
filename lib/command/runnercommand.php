@@ -6,6 +6,7 @@ use WS\BUnit\Cases\BaseCase;
 use WS\BUnit\Cases\CaseInvoker;
 use WS\BUnit\Console\Formatter\Output;
 use WS\BUnit\DB\Connection;
+use WS\BUnit\Module;
 use WS\BUnit\Report\ProgressPrinter;
 use WS\BUnit\Report\TestReport;
 use WS\BUnit\Report\TestReportResult;
@@ -56,6 +57,10 @@ class RunnerCommand extends BaseCommand {
      * @throws \Exception
      */
     private function initTests() {
+        if ($this->getConfig()->hasBootstrap()) {
+            $bootstrap = $this->getConfig()->getBootstrap();
+            Module::safeInclude($bootstrap);
+        }
         // include tests files
         $dir = $this->getConfig()->getWorkFolder();
         $directoryIterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \RecursiveIteratorIterator::SELF_FIRST));

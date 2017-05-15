@@ -88,7 +88,7 @@ class Config {
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function getWorkFolder() {
         return $this->data['folder'];
@@ -109,5 +109,19 @@ class Config {
      */
     public static function hasDefaultConfig() {
         return !!static::$defaultObject;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBootstrap() {
+        return !!$this->data['bootstrap'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getBootstrap() {
+        return $this->data['bootstrap'];
     }
 }
