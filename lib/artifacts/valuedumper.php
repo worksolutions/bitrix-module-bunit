@@ -25,9 +25,6 @@ class ValueDumper {
      * @return string
      */
     public function toString() {
-        ob_start();
-        var_dump($this->value);
-        $res = ob_get_clean();
-        return trim($res);
+        return var_export($this->value, true);
     }
 }
