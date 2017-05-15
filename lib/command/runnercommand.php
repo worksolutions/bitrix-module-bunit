@@ -6,6 +6,7 @@ use WS\BUnit\Cases\BaseCase;
 use WS\BUnit\Cases\CaseInvoker;
 use WS\BUnit\Console\Formatter\Output;
 use WS\BUnit\DB\Connection;
+use WS\BUnit\Report\ProgressPrinter;
 use WS\BUnit\Report\TestReport;
 use WS\BUnit\Report\TestReportResult;
 
@@ -97,35 +98,14 @@ class RunnerCommand extends BaseCommand {
     }
 
     private function runTests() {
+        $writer = $this->getConsole()->getWriter();
+        $progressPrinter = new ProgressPrinter($writer);
+        $progressPrinter->startProgress();
         foreach ($this->caseInvokers as $invoker) {
-            $invoker->invoke();
+            $invoker->invoke($progressPrinter);
             $this->report->apply($invoker->getReport());
         }
-
-        $writer = $this->getConsole()->getWriter();
-        $writer->nextLine();
-        $countInLine = 25;
-        $counter = 0;
-        foreach ($this->report->getResults() as $result) {
-            $counter++;
-            if ($counter % $countInLine == 0) {
-                $writer->nextLine();
-            }
-            switch ($result->getResult()) {
-                case TestReportResult::RESULT_SKIP:
-                    $writer->printChars("S");
-                    break;
-                case TestReportResult::RESULT_ERROR:
-                    $writer->printChars("E");
-                    break;
-                case TestReportResult::RESULT_SUCCESS:
-                    $writer->printChars(".");
-                    break;
-            }
-        }
-        if ($counter % $countInLine != 0) {
-            $writer->nextLine();
-        }
+        $progressPrinter->finishProgress();
     }
 
     private function viewReport() {

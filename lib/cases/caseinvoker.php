@@ -7,6 +7,7 @@ namespace WS\BUnit\Cases;
 
 use WS\BUnit\Artifacts\Assert;
 use WS\BUnit\Artifacts\AssertionException;
+use WS\BUnit\Interfaces\TestResultPrinter;
 use WS\BUnit\Report\TestReport;
 use WS\BUnit\Report\TestReportResult;
 
@@ -54,7 +55,7 @@ class CaseInvoker {
         return !!array_intersect($this->onlyLabels, $labels);
     }
 
-    public function invoke() {
+    public function invoke(TestResultPrinter $printer) {
         $analyzer = new CaseAnalyzer($this->class);
 
         $case = null;
@@ -79,7 +80,9 @@ class CaseInvoker {
                 $result->setResult(TestReportResult::RESULT_SKIP);
                 continue;
             }
+
             $this->runTest($case, $method, $result);
+            $printer->printTestResult($result->getResult());
         }
     }
 
@@ -115,10 +118,6 @@ class CaseInvoker {
                 } else {
                     $result->setResult(TestReportResult::RESULT_ERROR, $e->getMessage());
                 }
-            }
-
-            if ($result->getResult() == TestReportResult::RESULT_ERROR) {
-                break;
             }
         }
     }
