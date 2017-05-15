@@ -78,6 +78,7 @@ class CaseInvoker {
             $this->report->addResult($result);
             if ($analyzer->isSkip() || $method->isSkip()) {
                 $result->setResult(TestReportResult::RESULT_SKIP);
+                $printer->printTestResult($result->getResult());
                 continue;
             }
 

@@ -60,7 +60,7 @@ class Assert {
      */
     public function asTrue($actual, $errorMessage = "") {
         if ($actual !== true) {
-            throw $this->exception($errorMessage ? $errorMessage : "Value is not a true.")
+            throw $this->exception($errorMessage ? $errorMessage : "Value is not true.")
                 ->setMeasures($actual, true);
         }
     }
@@ -72,7 +72,7 @@ class Assert {
      */
     public function asFalse($actual, $errorMessage = "") {
         if ($actual !== false) {
-            throw $this->exception($errorMessage ? $errorMessage : "Value is not a false.")
+            throw $this->exception($errorMessage ? $errorMessage : "Value is not false.")
                 ->setMeasures($actual, false);
         }
     }
