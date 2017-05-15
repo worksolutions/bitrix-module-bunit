@@ -59,11 +59,8 @@ class CaseInvoker {
 
         $case = null;
         if (!$analyzer->isSkip()) {
-            // init assertion, give invokers manager
-
             /** @var BaseCase $case */
             $case = $this->class->newInstance(new Assert());
-            $case->setUp();
         }
 
         $ignoreLabels = !$this->onlyLabels;
@@ -84,9 +81,6 @@ class CaseInvoker {
             }
             $this->runTest($case, $method, $result);
         }
-        if ($case) {
-            $case->tearDown();
-        }
     }
 
     private function runTest(BaseCase $case, CaseTestMethod $method, TestReportResult $result) {
@@ -97,6 +91,7 @@ class CaseInvoker {
         }
         foreach ($listArgs as $args) {
             try {
+                $case->setUp();
                 $this->class->getMethod($method->getName())->invokeArgs($case, (array) $args);
                 if (!$method->getExpectedException()) {
                     $result->setResult(TestReportResult::RESULT_SUCCESS);
@@ -105,10 +100,12 @@ class CaseInvoker {
                 }
             } catch (AssertionException $e) {
                 $result->setResult(TestReportResult::RESULT_ERROR, $e->getMessage());
+                $case->tearDown();
                 if ($e->hasMeasures()) {
                     $result->setMeasures($e->getExpectedValue(), $e->getActualValue());
                 }
             } catch (\Exception $e) {
+                $case->tearDown();
                 $isExpected = ($expectedException = $method->getExpectedException())
                     &&
                     (get_class($e) == $expectedException || is_subclass_of($e, $expectedException));
