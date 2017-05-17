@@ -42,7 +42,7 @@ class ProgressPrinter implements TestResultPrinter {
     public function printTestResult($type) {
         switch ($type) {
             case TestReportResult::RESULT_SKIP:
-                $this->writer->printChars("S");
+                $this->writer->printChars("F");
                 break;
             case TestReportResult::RESULT_ERROR:
                 $this->writer->printChars("E");
