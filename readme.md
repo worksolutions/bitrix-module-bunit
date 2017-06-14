@@ -32,10 +32,8 @@ class IblockAmountTestCase {
 
 ![Запуск](doc/img/main-run.gif)
 
-## Содержание
+### [1. Устанавливаем и настраиваем модуль](doc/install.md)
 
-### [Устанавливаем и настраиваем модуль](doc/install.md)
+### [2. Пишем тесты](doc/writing.md)
 
-### [Пишем тесты](doc/writing.md)
-
-### [Запускаем](doc/running.md)
+### [3. Запускаем провеку](doc/running.md)
