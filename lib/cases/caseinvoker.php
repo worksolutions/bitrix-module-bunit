@@ -102,6 +102,7 @@ class CaseInvoker {
                 } else {
                     $result->setResult(TestReportResult::RESULT_ERROR, "Expected exception `{$method->getExpectedException()}`");
                 }
+                $case->tearDown();
             } catch (AssertionException $e) {
                 $result->setResult(TestReportResult::RESULT_ERROR, $e->getMessage());
                 $case->tearDown();
