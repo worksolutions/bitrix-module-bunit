@@ -8,7 +8,7 @@
 ```php
 <?php
 
-class IblockAmountTestCase {
+class IblockAmountTestCase extends \WS\BUnit\Cases\BaseCase {
     /**
      * @test
      */
